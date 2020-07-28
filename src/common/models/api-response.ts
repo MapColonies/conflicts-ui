@@ -5,7 +5,6 @@ export interface ApiHttpError {
 }
 
 export interface ApiHttpResponse<T = {}> {
-
   success: boolean;
 
   data: T;

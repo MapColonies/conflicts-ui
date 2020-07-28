@@ -21,18 +21,18 @@ export const HasResolvedFilter: React.FC = observer(() => {
   return (
     // <FormControl>
     //   <InputLabel id="resolved-label">resolve status</InputLabel>
-      <Select
-        value={Object.keys(options).find(
-          (key) => options[key] === searchParams.resolved
-        )}
-        onChange={(e) => onChange(e.target.value as string)}
-      >
-        {Object.keys(options).map((key) => (
-          <MenuItem key={key} value={key}>
-            {key}
-          </MenuItem>
-        ))}
-      </Select>
+    <Select
+      value={Object.keys(options).find(
+        (key) => options[key] === searchParams.resolved
+      )}
+      onChange={(e) => onChange(e.target.value as string)}
+    >
+      {Object.keys(options).map((key) => (
+        <MenuItem key={key} value={key}>
+          {key}
+        </MenuItem>
+      ))}
+    </Select>
     // </FormControl>
   );
 });

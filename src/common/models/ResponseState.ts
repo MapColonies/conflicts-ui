@@ -1,5 +1,5 @@
 export enum ResponseState {
-  PENDING = "pending",
-  DONE = "done",
-  ERROR = "error",
+  PENDING = 'pending',
+  DONE = 'done',
+  ERROR = 'error',
 }

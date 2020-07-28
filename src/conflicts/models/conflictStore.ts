@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import {
   types,
   Instance,
@@ -12,13 +13,15 @@ import { PaginationResult } from '../../common/models/pagination-result';
 import { feature } from '@turf/helpers';
 import { Feature, Geometry } from 'geojson';
 
-import { ConflictSearchParams } from './conflict-search-params';
+import {
+  ConflictSearchParams,
+} from './conflict-search-params';
 import { IRootStore } from './rootStore';
 import { pagination } from './pagination';
 import { Conflict, IConflict } from './conflict';
 import { ResponseState } from '../../common/models/ResponseState';
 
-type conflictResponse = ApiHttpResponse<PaginationResult<IConflict[]>>;
+export type conflictResponse = ApiHttpResponse<PaginationResult<IConflict[]>>;
 
 const conflictFormatter = (conflict: IConflict) => {
   const newConflict = { ...conflict };
@@ -36,18 +39,21 @@ const conflictFormatter = (conflict: IConflict) => {
 export const ConflictStore = types
   .model({
     conflicts: types.array(Conflict),
-    state: types.enumeration<ResponseState>('State', Object.values(ResponseState)),
+    state: types.enumeration<ResponseState>(
+      'State',
+      Object.values(ResponseState)
+    ),
     selectedConflict: types.safeReference(Conflict),
     searchParams: types.optional(ConflictSearchParams, {}),
-    pagination: types.optional(pagination, {})
+    pagination: types.optional(pagination, {}),
   })
   .views((self) => ({
-    get conflictLocations(): Feature<Geometry>[] {
+    get conflictLocations (): Feature<Geometry>[] {
       return self.conflicts.map((conflict) =>
         feature<Geometry>(conflict.location, {})
       );
     },
-    get root(): IRootStore {
+    get root (): IRootStore {
       return getParent(self);
     },
   }))
@@ -60,14 +66,15 @@ export const ConflictStore = types
       self.selectedConflict = conflict;
     };
 
-    const fetchConflicts = flow(function* fetchConflicts(): Generator<
-      Promise<conflictResponse>,
-      void,
-      conflictResponse
+    const fetchConflicts = flow(function* fetchConflicts (): Generator<
+    Promise<conflictResponse>,
+    void,
+    conflictResponse
     > {
       self.conflicts = cast([]);
       self.state = ResponseState.PENDING;
       const snapshot = getSnapshot(self.searchParams);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const params: any = {};
       if (snapshot.from) {
         params.from = Math.floor(snapshot.from / 1000);
@@ -85,7 +92,7 @@ export const ConflictStore = types
         const conflicts = result.data.data;
         resetSelectedConflict();
         self.conflicts.replace(conflicts.map(conflictFormatter));
-        self.pagination.setTotalItems(result.data.total)
+        self.pagination.setTotalItems(result.data.total);
         self.state = ResponseState.DONE;
       } catch (error) {
         console.error(error);
