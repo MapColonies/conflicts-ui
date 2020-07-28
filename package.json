@@ -10,6 +10,40 @@
     "url": "https://github.com/MapColonies/conflicts-ui.git"
   },
   "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix"
+    ]
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "release": "standard-version"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "/node_modules/(?!(ol)/).*/"
+    ]
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "./eslintrc"
+    ]
+  },
   "private": true,
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
@@ -39,26 +73,6 @@
     "standard-version": "^8.0.2",
     "typescript": "^3.7.5"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{ts,tsx}": ["eslint --fix"]
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
   "devDependencies": {
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
@@ -71,17 +85,6 @@
     "jest-enzyme": "^7.1.2",
     "lint-staged": "^10.2.11",
     "react-test-renderer": "^16.13.1"
-  },
-  "jest": {
-    "transformIgnorePatterns": [
-      "/node_modules/(?!(ol)/).*/"
-    ]
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "./eslintrc"
-    ]
   },
   "browserslist": {
     "production": [
