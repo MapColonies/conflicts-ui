@@ -1,0 +1,39 @@
+{
+  "extends": [
+    "react-app"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "no-var": "error",
+    "camelcase": "error",
+    "space-before-blocks": "error",
+    "eol-last": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        "**/*ts?(x)"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/quotes": [
+          "error",
+          "single",
+          "avoid-escape"
+        ],
+        "@typescript-eslint/indent": [
+          "error",
+          2
+        ],
+        "@typescript-eslint/semi": [
+          "error",
+          "always"
+        ],
+        "@typescript-eslint/space-before-function-paren": "error"
+      }
+    }
+  ]
+}
