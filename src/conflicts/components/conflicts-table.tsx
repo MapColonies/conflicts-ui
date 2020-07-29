@@ -1,14 +1,14 @@
 import React from 'react';
-import { useStore } from '../models/rootStore';
 import { observer } from 'mobx-react-lite';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import ConflictItem from './conflict-item';
 import { Typography } from '@material-ui/core';
 import { CellMetadata, SmartTable } from '@map-colonies/shared-components';
+import { useStore } from '../models/rootStore';
 
 import { IConflict } from '../models/conflict';
 import { ResponseState } from '../../common/models/ResponseState';
+import ConflictItem from './conflict-item';
 
 const useStyle = makeStyles((theme: Theme) =>
   createStyles({

@@ -2,8 +2,8 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 
-import ConflictItem from './conflict-item';
 import { IConflict } from '../models/conflict';
+import ConflictItem from './conflict-item';
 
 const conflict: IConflict = {
   id: '7e73d05b-8159-4e51-a302-78aa6b8fbd97',

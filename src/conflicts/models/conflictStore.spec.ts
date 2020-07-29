@@ -1,6 +1,6 @@
 import * as fs from 'fs';
-import { rootStore } from './rootStore';
 import { when } from 'mobx';
+import { rootStore } from './rootStore';
 
 console.error = jest.fn();
 

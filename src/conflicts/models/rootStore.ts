@@ -1,7 +1,7 @@
 import { types, Instance, getEnv, onAction } from 'mobx-state-tree';
 import { useContext, createContext } from 'react';
-import { ConflictStore, conflictResponse } from './conflictStore';
 import { ResponseState } from '../../common/models/ResponseState';
+import { ConflictStore, conflictResponse } from './conflictStore';
 
 type fetchConflicts = (url:string, params:object) => Promise<conflictResponse>;
 

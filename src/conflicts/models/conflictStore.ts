@@ -8,18 +8,17 @@ import {
   onSnapshot,
   getSnapshot,
 } from 'mobx-state-tree';
-import { ApiHttpResponse } from '../../common/models/api-response';
-import { PaginationResult } from '../../common/models/pagination-result';
 import { feature } from '@turf/helpers';
 import { Feature, Geometry } from 'geojson';
-
+import { ApiHttpResponse } from '../../common/models/api-response';
+import { PaginationResult } from '../../common/models/pagination-result';
+import { ResponseState } from '../../common/models/ResponseState';
 import {
   ConflictSearchParams,
 } from './conflict-search-params';
 import { IRootStore } from './rootStore';
 import { pagination } from './pagination';
 import { Conflict, IConflict } from './conflict';
-import { ResponseState } from '../../common/models/ResponseState';
 
 export type conflictResponse = ApiHttpResponse<PaginationResult<IConflict[]>>;
 

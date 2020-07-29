@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'mobx-react-lite/batchingForReactDom';
 import './index.css';
+import Axios from 'axios';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { StoreProvider, rootStore } from './conflicts/models/rootStore';
-import Axios from 'axios';
 import { conflictResponse } from './conflicts/models/conflictStore';
 
 const store = rootStore.create(

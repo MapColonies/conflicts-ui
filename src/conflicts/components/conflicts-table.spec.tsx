@@ -6,9 +6,9 @@ import { act } from 'react-dom/test-utils';
 import { Typography, CircularProgress } from '@material-ui/core';
 
 import { baseRootStore, StoreProvider } from '../models/rootStore';
+import { ResponseState } from '../../common/models/ResponseState';
 import ConflictItem from './conflict-item';
 import { ConflictsTable } from './conflicts-table';
-import { ResponseState } from '../../common/models/ResponseState';
 
 console.error = jest.fn();
 

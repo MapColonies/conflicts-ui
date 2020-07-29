@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select, MenuItem } from '@material-ui/core';
-import { useStore } from '../models/rootStore';
 import { observer } from 'mobx-react-lite';
+import { useStore } from '../models/rootStore';
 
 const options: { [key: string]: boolean | undefined } = {
   all: undefined,

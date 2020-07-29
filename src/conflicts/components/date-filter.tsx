@@ -1,8 +1,8 @@
 import React from 'react';
-import { useStore } from '../models/rootStore';
 import { Button, Popover } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
 import { DateTimeRangePicker } from '@map-colonies/shared-components';
+import { useStore } from '../models/rootStore';
 
 export const DateFilter: React.FC = observer(() => {
   const { conflictsStore } = useStore();
