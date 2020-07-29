@@ -9,7 +9,7 @@ export interface PaginationResult<T> {
 
   lastPage?: number;
 
-  data: T
+  data: T;
 
   from?: number;
 

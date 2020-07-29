@@ -45,8 +45,8 @@ it('isDateRangeValid returns false if both dates are defined, and from is before
   const toDate = new Date(epochTimestamp);
   toDate.setDate(toDate.getDate() + 5);
   const store = ConflictSearchParams.create({
-      from: fromDate,
-      to: toDate,
+    from: fromDate,
+    to: toDate,
   });
 
   expect(store.isDateRangeValid).toBe(true);

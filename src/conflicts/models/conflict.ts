@@ -1,5 +1,6 @@
-import { types, Instance } from "mobx-state-tree";
-import { Geometry } from "geojson";
+/* eslint-disable camelcase */
+import { types, Instance } from 'mobx-state-tree';
+import { Geometry } from 'geojson';
 
 export const Conflict = types.model({
   id: types.identifier,
