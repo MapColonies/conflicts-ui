@@ -27,4 +27,4 @@ jobs:
           github_token: ${{ secrets.github_token }}
           # Enable linters
           eslint: true
-          eslint_extensions: "ts, tsx"
+          eslint_args: "**/*ts?(x)"
