@@ -15,7 +15,7 @@ console.error = jest.fn();
 
 const originalWarn = console.warn.bind(console.warn);
 beforeAll(() => {
-  console.warn = (msg:string) => 
+  console.warn = (msg: string) =>
     !msg.toString().includes('observer batching') && originalWarn(msg);
 });
 afterAll(() => {
@@ -24,7 +24,8 @@ afterAll(() => {
 const conflicts = JSON.parse(
   fs.readFileSync('./public/conflicts.json').toString()
 ) as IConflict[];
-const conflictFetcher = async () :Promise<IConflict[]> => Promise.resolve<IConflict[]>(conflicts);
+const conflictFetcher = async (): Promise<IConflict[]> =>
+  Promise.resolve<IConflict[]>(conflicts);
 
 it('render correctly and switch between status messages and content', async () => {
   expect.assertions(2);

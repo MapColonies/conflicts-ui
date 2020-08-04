@@ -13,9 +13,7 @@ import { Feature } from 'geojson';
 import { ApiHttpResponse } from '../../common/models/api-response';
 import { PaginationResult } from '../../common/models/pagination-result';
 import { ResponseState } from '../../common/models/ResponseState';
-import {
-  conflictSearchParams,
-} from './conflict-search-params';
+import { conflictSearchParams } from './conflict-search-params';
 import { IRootStore } from './rootStore';
 import { pagination } from './pagination';
 import { Conflict, IConflict } from './conflict';
@@ -49,12 +47,10 @@ export const conflictStore = types
     pagination: types.optional(pagination, {}),
   })
   .views((self) => ({
-    get conflictLocations (): Feature[] {
-      return self.conflicts.map((conflict) =>
-        feature(conflict.location, {})
-      );
+    get conflictLocations(): Feature[] {
+      return self.conflicts.map((conflict) => feature(conflict.location, {}));
     },
-    get root (): IRootStore {
+    get root(): IRootStore {
       return getParent(self);
     },
   }))
@@ -67,39 +63,41 @@ export const conflictStore = types
       self.selectedConflict = conflict;
     };
 
-    const fetchConflicts: () => Promise<void> = flow(function* fetchConflicts (): Generator<
-    Promise<ConflictResponse>,
-    void,
-    ConflictResponse
-    > {
-      self.conflicts = cast([]);
-      self.state = ResponseState.PENDING;
-      const snapshot = getSnapshot(self.searchParams);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const params: Record<string, unknown> = {};
-      if (snapshot.from !== undefined) {
-        params.from = Math.floor(snapshot.from / MILISECONDS_IN_SECOND);
-      }
-      if (snapshot.to !== undefined) {
-        params.to = Math.floor(snapshot.to / MILISECONDS_IN_SECOND);
-      }
-      params.geojson = snapshot.geojson;
-      params.resolved = snapshot.resolved;
-      params.page = self.pagination.page + 1;
-      params.limit = self.pagination.itemsPerPage;
+    const fetchConflicts: () => Promise<void> = flow(
+      function* fetchConflicts(): Generator<
+        Promise<ConflictResponse>,
+        void,
+        ConflictResponse
+      > {
+        self.conflicts = cast([]);
+        self.state = ResponseState.PENDING;
+        const snapshot = getSnapshot(self.searchParams);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const params: Record<string, unknown> = {};
+        if (snapshot.from !== undefined) {
+          params.from = Math.floor(snapshot.from / MILISECONDS_IN_SECOND);
+        }
+        if (snapshot.to !== undefined) {
+          params.to = Math.floor(snapshot.to / MILISECONDS_IN_SECOND);
+        }
+        params.geojson = snapshot.geojson;
+        params.resolved = snapshot.resolved;
+        params.page = self.pagination.page + 1;
+        params.limit = self.pagination.itemsPerPage;
 
-      try {
-        const result = yield self.root.fetch('/conflicts', params);
-        const conflicts = result.data.data;
-        resetSelectedConflict();
-        self.conflicts.replace(conflicts.map(conflictFormatter));
-        self.pagination.setTotalItems(result.data.total);
-        self.state = ResponseState.DONE;
-      } catch (error) {
-        console.error(error);
-        self.state = ResponseState.ERROR;
+        try {
+          const result = yield self.root.fetch('/conflicts', params);
+          const conflicts = result.data.data;
+          resetSelectedConflict();
+          self.conflicts.replace(conflicts.map(conflictFormatter));
+          self.pagination.setTotalItems(result.data.total);
+          self.state = ResponseState.DONE;
+        } catch (error) {
+          console.error(error);
+          self.state = ResponseState.ERROR;
+        }
       }
-    });
+    );
 
     const afterCreate = (): void => {
       onSnapshot(self.searchParams, () => {

@@ -1,14 +1,14 @@
-import React from "react";
-import { observer } from "mobx-react-lite";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { makeStyles, createStyles, Theme } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import { CellMetadata, SmartTable } from "@map-colonies/shared-components";
-import { useStore } from "../models/rootStore";
+import React from 'react';
+import { observer } from 'mobx-react-lite';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
+import { CellMetadata, SmartTable } from '@map-colonies/shared-components';
+import { useStore } from '../models/rootStore';
 
-import { IConflict } from "../models/conflict";
-import { ResponseState } from "../../common/models/ResponseState";
-import ConflictItem from "./conflict-item";
+import { IConflict } from '../models/conflict';
+import { ResponseState } from '../../common/models/ResponseState';
+import ConflictItem from './conflict-item';
 
 const SPACING = 2;
 
@@ -20,9 +20,9 @@ const useStyle = makeStyles((theme: Theme) =>
       padding: theme.spacing(SPACING),
     },
     infoContent: {
-      display: "block",
-      marginRight: "auto",
-      marginLeft: "auto",
+      display: 'block',
+      marginRight: 'auto',
+      marginLeft: 'auto',
     },
   })
 );
@@ -30,20 +30,20 @@ const useStyle = makeStyles((theme: Theme) =>
 const cellsMetaData: CellMetadata<IConflict>[] = [
   {
     disablePadding: false,
-    id: "source_server",
-    label: "Source Server",
+    id: 'source_server',
+    label: 'Source Server',
     numeric: false,
   },
   {
     disablePadding: false,
-    id: "target_server",
-    label: "Target Server",
+    id: 'target_server',
+    label: 'Target Server',
     numeric: false,
   },
   {
     disablePadding: false,
-    id: "created_at",
-    label: "Created at",
+    id: 'created_at',
+    label: 'Created at',
     numeric: false,
     transform: (c: Date): string => c.toLocaleString(),
   },

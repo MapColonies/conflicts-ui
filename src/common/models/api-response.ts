@@ -4,10 +4,10 @@ export interface ApiHttpError {
   message: string;
 }
 
-export interface ApiHttpResponse<T = Record<string,unknown>> {
+export interface ApiHttpResponse<T = Record<string, unknown>> {
   success: boolean;
 
   data: T;
 
-  error: ApiHttpError | Record<string,unknown>;
+  error: ApiHttpError | Record<string, unknown>;
 }

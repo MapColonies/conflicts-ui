@@ -12,7 +12,7 @@ export const KeywordsFilter: React.FC = () => {
       <input
         value={keywords}
         onChange={(e): void => setKeywords(e.target.value)}
-        type='text'
+        type="text"
       />
       <button onClick={onClick}>set</button>
     </div>
