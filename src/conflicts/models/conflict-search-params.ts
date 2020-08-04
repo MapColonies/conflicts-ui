@@ -2,7 +2,7 @@ import { types, Instance } from 'mobx-state-tree';
 import { Geometry } from 'geojson';
 import { isBefore } from 'date-fns';
 
-export const ConflictSearchParams = types
+export const conflictSearchParams = types
   .model({
     geojson: types.maybe(types.frozen<Geometry>()),
     from: types.maybe(types.Date),
@@ -13,9 +13,7 @@ export const ConflictSearchParams = types
   .views((self) => ({
     get isDateRangeValid (): boolean {
       return (
-        !self.from ||
-        !self.to ||
-        (!!self.from && !!self.to && isBefore(self.from, self.to))
+        !(!!self.from && !!self.to && !isBefore(self.from, self.to))
       );
     },
   }))
@@ -43,4 +41,4 @@ export const ConflictSearchParams = types
   }));
 
 export interface IConflictSearchParams
-  extends Instance<typeof ConflictSearchParams> {}
+  extends Instance<typeof conflictSearchParams> {}

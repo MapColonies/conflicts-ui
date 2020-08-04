@@ -1,33 +1,37 @@
 import { types, Instance, getEnv, onAction } from 'mobx-state-tree';
 import { useContext, createContext } from 'react';
 import { ResponseState } from '../../common/models/ResponseState';
-import { ConflictStore, conflictResponse } from './conflictStore';
+import { conflictStore, ConflictResponse } from './conflictStore';
 
-type fetchConflicts = (url:string, params:object) => Promise<conflictResponse>;
+type FetchConflicts = (
+  url: string,
+  params: Record<string, unknown>
+) => Promise<ConflictResponse>;
 
 export const baseRootStore = types
   .model({
-    conflictsStore: types.optional(ConflictStore, {
+    conflictsStore: types.optional(conflictStore, {
       state: ResponseState.PENDING,
       searchParams: {},
     }),
     // mapStore: types.optional(ConflictMapState, {})
   })
   .views((self) => ({
-    get fetch (): fetchConflicts {
-      return getEnv(self).fetch as fetchConflicts;
+    get fetch(): FetchConflicts {
+      const env: { fetch: FetchConflicts } = getEnv(self);
+      return env.fetch;
     },
   }));
 
 export const rootStore = baseRootStore.actions((self) => ({
-  afterCreate (): void {
-    self.conflictsStore.fetchConflicts();
+  afterCreate(): void {
+    self.conflictsStore.fetchConflicts().catch(console.error);
 
     onAction(
       self,
       (call) => {
         if (call.name === 'setItemsPerPage' || call.name === 'setPage') {
-          self.conflictsStore.fetchConflicts();
+          self.conflictsStore.fetchConflicts().catch(console.error);
         }
       },
       true
@@ -36,13 +40,13 @@ export const rootStore = baseRootStore.actions((self) => ({
 }));
 export interface IBaseRootStore extends Instance<typeof baseRootStore> {}
 export interface IRootStore extends Instance<typeof rootStore> {}
-const RootStoreContext = createContext<null | IRootStore | IBaseRootStore>(
+const rootStoreContext = createContext<null | IRootStore | IBaseRootStore>(
   null
 );
 
-export const StoreProvider = RootStoreContext.Provider;
+export const StoreProvider = rootStoreContext.Provider;
 export const useStore = (): IRootStore | IBaseRootStore => {
-  const store = useContext(RootStoreContext);
+  const store = useContext(rootStoreContext);
   if (store === null) {
     throw new Error('Store cannot be null, please add a context provider');
   }
