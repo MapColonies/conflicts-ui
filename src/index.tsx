@@ -8,7 +8,7 @@ import * as serviceWorker from './serviceWorker';
 import { StoreProvider, rootStore } from './conflicts/models/rootStore';
 import { ConflictResponse } from './conflicts/models/conflictStore';
 
-const store = rootStore.create(
+const Store = rootStore.create(
   {},
   {
     fetch: async (url: string, params: Record<string, unknown>) =>
@@ -17,7 +17,7 @@ const store = rootStore.create(
 );
 ReactDOM.render(
   <React.StrictMode>
-    <StoreProvider value={store}>
+    <StoreProvider value={Store}>
       <App />
     </StoreProvider>
   </React.StrictMode>,
