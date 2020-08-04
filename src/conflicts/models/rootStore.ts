@@ -45,7 +45,7 @@ const rootStoreContext = createContext<null | IRootStore | IBaseRootStore>(
 );
 
 export const StoreProvider = rootStoreContext.Provider;
-export const UseStore = (): IRootStore | IBaseRootStore => {
+export const useStore = (): IRootStore | IBaseRootStore => {
   const store = useContext(rootStoreContext);
   if (store === null) {
     throw new Error('Store cannot be null, please add a context provider');
