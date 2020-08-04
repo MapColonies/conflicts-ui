@@ -7,7 +7,7 @@ jest.mock('react', () => {
   };
 });
 
-const contextMock = useContext as jest.Mock<null | {}>;
+const contextMock = useContext as jest.Mock<null | unknown>;
 
 afterEach(() => {
   contextMock.mockReset();

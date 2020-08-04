@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { types, Instance } from 'mobx-state-tree';
 import { Geometry } from 'geojson';
 

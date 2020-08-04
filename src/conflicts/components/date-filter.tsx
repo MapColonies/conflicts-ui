@@ -9,11 +9,11 @@ export const DateFilter: React.FC = observer(() => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleClose = (): void => {
     setAnchorEl(null);
   };
 
@@ -22,7 +22,7 @@ export const DateFilter: React.FC = observer(() => {
   const open = Boolean(anchorEl);
   return (
     <>
-      <Button variant='outlined' onClick={handleClick}>
+      <Button variant="outlined" onClick={handleClick}>
         {from ? from.toLocaleString() : 'Start of time'} -{' '}
         {to ? to.toLocaleString() : 'End of time'}
       </Button>
@@ -34,7 +34,7 @@ export const DateFilter: React.FC = observer(() => {
         keepMounted
       >
         <DateTimeRangePicker
-          onChange={({ from, to }) => {
+          onChange={({ from, to }): void => {
             conflictsStore.searchParams.setDateRange(from, to);
             handleClose();
           }}

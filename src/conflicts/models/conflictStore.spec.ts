@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import { when } from 'mobx';
 import { rootStore } from './rootStore';
+import { IConflict } from './conflict';
 
 console.error = jest.fn();
 
@@ -31,10 +32,11 @@ const locations = [
   },
 ];
 
-const conflicts = JSON.parse(
+const conflicts: IConflict[] = JSON.parse(
   fs.readFileSync('./public/conflicts.json').toString()
-);
-const conflictFetcher = () => Promise.resolve(conflicts);
+) as IConflict[];
+const conflictFetcher = async (): Promise<IConflict[]> =>
+  Promise.resolve<IConflict[]>(conflicts);
 
 it('return an array of features of the conflicts location', async () => {
   const { conflictsStore } = rootStore.create({}, { fetch: conflictFetcher });
@@ -70,14 +72,14 @@ it('format and set the conflicts, and set state to done on fetch', async () => {
   await conflictsStore.fetchConflicts();
 
   expect(conflictsStore.state).toEqual('done');
-  expect(conflictsStore.conflicts.length).toEqual(3);
+  expect(conflictsStore.conflicts).toHaveLength(3);
 });
 
 it('set state to error when there is an error fetching the conflicts', async () => {
   expect.assertions(1);
   const { conflictsStore } = rootStore.create(
     {},
-    { fetch: () => Promise.reject(new Error()) }
+    { fetch: async () => Promise.reject(new Error()) }
   );
 
   await conflictsStore.fetchConflicts();

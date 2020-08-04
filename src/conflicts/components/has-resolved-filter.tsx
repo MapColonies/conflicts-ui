@@ -13,7 +13,7 @@ export const HasResolvedFilter: React.FC = observer(() => {
   const { conflictsStore } = useStore();
   const { searchParams } = conflictsStore;
 
-  const onChange = (option: string) => {
+  const onChange = (option: string): void => {
     const resolveStatus = options[option];
     searchParams.setResolved(resolveStatus);
   };
@@ -25,7 +25,7 @@ export const HasResolvedFilter: React.FC = observer(() => {
       value={Object.keys(options).find(
         (key) => options[key] === searchParams.resolved
       )}
-      onChange={(e) => onChange(e.target.value as string)}
+      onChange={(e): void => onChange(e.target.value as string)}
     >
       {Object.keys(options).map((key) => (
         <MenuItem key={key} value={key}>

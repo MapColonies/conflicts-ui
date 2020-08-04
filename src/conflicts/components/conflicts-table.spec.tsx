@@ -9,12 +9,13 @@ import { baseRootStore, StoreProvider } from '../models/rootStore';
 import { ResponseState } from '../../common/models/ResponseState';
 import ConflictItem from './conflict-item';
 import { ConflictsTable } from './conflicts-table';
+import { IConflict } from '../models/conflict';
 
 console.error = jest.fn();
 
 const originalWarn = console.warn.bind(console.warn);
 beforeAll(() => {
-  console.warn = (msg:string) =>
+  console.warn = (msg: string) =>
     !msg.toString().includes('observer batching') && originalWarn(msg);
 });
 afterAll(() => {
@@ -22,8 +23,9 @@ afterAll(() => {
 });
 const conflicts = JSON.parse(
   fs.readFileSync('./public/conflicts.json').toString()
-);
-const conflictFetcher = () => Promise.resolve(conflicts);
+) as IConflict[];
+const conflictFetcher = async (): Promise<IConflict[]> =>
+  Promise.resolve<IConflict[]>(conflicts);
 
 it('render correctly and switch between status messages and content', async () => {
   expect.assertions(2);
@@ -35,7 +37,7 @@ it('render correctly and switch between status messages and content', async () =
     </StoreProvider>
   );
   expect(wrapper.find(CircularProgress)).toHaveLength(1);
-  await act(() => mockStore.conflictsStore.fetchConflicts());
+  await act(async () => mockStore.conflictsStore.fetchConflicts());
   await when(() => mockStore.conflictsStore.state === ResponseState.DONE);
   wrapper.update();
   expect(wrapper.exists(ConflictsTable)).toBeTruthy();
@@ -44,10 +46,10 @@ it('render correctly and switch between status messages and content', async () =
 it("renders correctly and doesn't show any item if conflicts is empty", async () => {
   const mockStore = baseRootStore.create(
     {},
-    { fetch: () => Promise.resolve({ data: { data: [] } }) }
+    { fetch: async () => Promise.resolve({ data: { data: [] } }) }
   );
 
-  mockStore.conflictsStore.fetchConflicts();
+  await mockStore.conflictsStore.fetchConflicts();
 
   await when(() => mockStore.conflictsStore.state === ResponseState.DONE);
   const wrapper = mount(
@@ -55,18 +57,18 @@ it("renders correctly and doesn't show any item if conflicts is empty", async ()
       <ConflictsTable />
     </StoreProvider>
   );
-  expect(wrapper.findWhere((n) => n.type() === ConflictItem).length).toEqual(0);
+  expect(wrapper.findWhere((n) => n.type() === ConflictItem)).toHaveLength(0);
 });
 
 it('shows an error message when there is an error fetching the conflicts', async () => {
   const mockStore = baseRootStore.create(
     {},
     {
-      fetch: () => Promise.reject(new Error()),
+      fetch: async () => Promise.reject(new Error()),
     }
   );
 
-  mockStore.conflictsStore.fetchConflicts();
+  await mockStore.conflictsStore.fetchConflicts();
 
   await when(() => mockStore.conflictsStore.state === ResponseState.ERROR);
   const wrapper = mount(
@@ -74,7 +76,7 @@ it('shows an error message when there is an error fetching the conflicts', async
       <ConflictsTable />
     </StoreProvider>
   );
-  expect(wrapper.findWhere((n) => n.type() === ConflictItem).length).toEqual(0);
+  expect(wrapper.findWhere((n) => n.type() === ConflictItem)).toHaveLength(0);
   expect(wrapper.find(Typography).props()).toHaveProperty(
     'children',
     'Something went horribly wrong, please try again later'

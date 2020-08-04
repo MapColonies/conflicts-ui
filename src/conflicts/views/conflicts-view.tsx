@@ -16,7 +16,9 @@ const ConflictsView: React.FC = observer(() => {
   return (
     <MapFilterContainer
       handlePolygonSelected={conflictsStore.searchParams.setLocation}
-      handlePolygonReset={conflictsStore.searchParams.resetLocation}
+      handlePolygonReset={conflictsStore.searchParams.resetLocation.bind(
+        conflictsStore.searchParams
+      )}
       children={<ConflictsTable />}
       filters={[<DateFilter />, <HasResolvedFilter />]}
       mapContent={

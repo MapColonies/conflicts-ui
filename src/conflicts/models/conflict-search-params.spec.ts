@@ -1,5 +1,5 @@
 import { Geometry } from 'geojson';
-import { ConflictSearchParams } from './conflict-search-params';
+import { conflictSearchParams } from './conflict-search-params';
 
 const geom: Geometry = {
   type: 'Polygon',
@@ -15,13 +15,13 @@ const geom: Geometry = {
 };
 
 it('isDateRangeValid returns true when both dates are undefined', () => {
-  const store = ConflictSearchParams.create({});
+  const store = conflictSearchParams.create({});
 
   expect(store.isDateRangeValid).toEqual(true);
 });
 
 it('isDateRangeValid returns true if only one date is defined', () => {
-  const store = ConflictSearchParams.create({ from: new Date() });
+  const store = conflictSearchParams.create({ from: new Date() });
 
   expect(store.isDateRangeValid).toEqual(true);
 });
@@ -31,7 +31,7 @@ it('isDateRangeValid returns false if both dates are defined, but from > to', ()
   const fromDate = new Date(epochTimestamp);
   const toDate = new Date(epochTimestamp);
   toDate.setDate(toDate.getDate() - 5);
-  const store = ConflictSearchParams.create({
+  const store = conflictSearchParams.create({
     from: fromDate,
     to: toDate,
   });
@@ -44,7 +44,7 @@ it('isDateRangeValid returns false if both dates are defined, and from is before
   const fromDate = new Date(epochTimestamp);
   const toDate = new Date(epochTimestamp);
   toDate.setDate(toDate.getDate() + 5);
-  const store = ConflictSearchParams.create({
+  const store = conflictSearchParams.create({
     from: fromDate,
     to: toDate,
   });
@@ -53,7 +53,7 @@ it('isDateRangeValid returns false if both dates are defined, and from is before
 });
 
 it('setLocation updates the geojson in the store', () => {
-  const store = ConflictSearchParams.create({});
+  const store = conflictSearchParams.create({});
 
   store.setLocation(geom);
 
@@ -61,7 +61,7 @@ it('setLocation updates the geojson in the store', () => {
 });
 
 it('setDateRange updates the dates in the store', () => {
-  const store = ConflictSearchParams.create({});
+  const store = conflictSearchParams.create({});
   const from = new Date();
   const to = new Date();
 
@@ -72,7 +72,7 @@ it('setDateRange updates the dates in the store', () => {
 });
 
 it('setResolved updates resolved in the store', () => {
-  const store = ConflictSearchParams.create({});
+  const store = conflictSearchParams.create({});
 
   store.setResolved(true);
 
@@ -80,7 +80,7 @@ it('setResolved updates resolved in the store', () => {
 });
 
 it('setKeywords replaces the keywords in the store', () => {
-  const store = ConflictSearchParams.create({});
+  const store = conflictSearchParams.create({});
   const keywords = ['a', 'b', 'c'];
 
   store.setKeywords(keywords);
@@ -89,7 +89,7 @@ it('setKeywords replaces the keywords in the store', () => {
 });
 
 it('resetLocation sets geojson to be undefined', () => {
-  const store = ConflictSearchParams.create({ geojson: geom });
+  const store = conflictSearchParams.create({ geojson: geom });
 
   store.resetLocation();
 

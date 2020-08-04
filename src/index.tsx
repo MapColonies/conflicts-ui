@@ -6,18 +6,18 @@ import Axios from 'axios';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { StoreProvider, rootStore } from './conflicts/models/rootStore';
-import { conflictResponse } from './conflicts/models/conflictStore';
+import { ConflictResponse } from './conflicts/models/conflictStore';
 
-const store = rootStore.create(
+const Store = rootStore.create(
   {},
   {
-    fetch: (url: string, params: object) =>
-      Axios.post(url, params).then((res) => res.data as conflictResponse),
+    fetch: async (url: string, params: Record<string, unknown>) =>
+      Axios.post(url, params).then((res) => res.data as ConflictResponse),
   }
 );
 ReactDOM.render(
   <React.StrictMode>
-    <StoreProvider value={store}>
+    <StoreProvider value={Store}>
       <App />
     </StoreProvider>
   </React.StrictMode>,
