@@ -3,7 +3,7 @@ import React from 'react';
 import { mount } from 'enzyme';
 import { when } from 'mobx';
 import { act } from 'react-dom/test-utils';
-import { Typography, CircularProgress } from '@material-ui/core';
+import { Typography, CircularProgress } from '@map-colonies/react-core';
 
 import { baseRootStore, StoreProvider } from '../models/rootStore';
 import { ResponseState } from '../../common/models/ResponseState';

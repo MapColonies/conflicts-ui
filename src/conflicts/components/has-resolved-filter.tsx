@@ -1,6 +1,8 @@
 import React from 'react';
-import { Select, MenuItem } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
+
+import { Select } from '@map-colonies/react-core';
+
 import { useStore } from '../models/rootStore';
 
 const options: { [key: string]: boolean | undefined } = {
@@ -19,20 +21,11 @@ export const HasResolvedFilter: React.FC = observer(() => {
   };
 
   return (
-    // <FormControl>
-    //   <InputLabel id="resolved-label">resolve status</InputLabel>
     <Select
-      value={Object.keys(options).find(
-        (key) => options[key] === searchParams.resolved
-      )}
-      onChange={(e): void => onChange(e.target.value as string)}
-    >
-      {Object.keys(options).map((key) => (
-        <MenuItem key={key} value={key}>
-          {key}
-        </MenuItem>
-      ))}
-    </Select>
-    // </FormControl>
+      enhanced
+      value={Object.keys(options).find((key) => options[key] === searchParams.resolved)}
+      options={Object.keys(options).map((key) => key)}
+      onChange={(e: React.ChangeEvent<HTMLSelectElement>): void => onChange(e.target.value as string)}
+    />
   );
 });

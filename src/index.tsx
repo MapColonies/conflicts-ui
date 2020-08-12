@@ -16,11 +16,12 @@ const store = rootStore.create(
   }
 );
 ReactDOM.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <StoreProvider value={store}>
       <App />
     </StoreProvider>
-  </React.StrictMode>,
+  // </React.StrictMode>
+  ,
   document.getElementById('root')
 );
 
