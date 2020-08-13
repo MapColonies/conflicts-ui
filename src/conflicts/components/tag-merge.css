@@ -1,0 +1,45 @@
+.created {
+  background-color: rgba(0, 252, 0, 0.151) !important;
+  /* background-color: rgba(0, 172, 252, 0.38) !important; */
+}
+
+.modified {
+  background-color: rgba(253, 253, 0, 0.151) !important;
+  /* background-color: rgba(253, 253, 0, 0.45) !important; */
+}
+
+.deleted {
+  background-color: rgba(255, 0, 0, 0.151) !important;
+  /* background-color: rgba(255, 0, 55, 0.55) !important; */
+}
+
+.unchanged {
+  background-color: rgba(0, 0, 0, 0.315) !important;
+}
+
+.selected {
+  border: 2px solid rgba(88, 88, 252, 0.555) !important;
+}
+
+.created .selected {
+  background-color: rgba(44, 148, 44, 0.3) !important;
+  /* background-color: rgba(0, 172, 252, 0.38) !important; */
+}
+
+.modified .selected {
+  background-color: rgba(253, 253, 0, 0.3) !important;
+  /* background-color: rgba(253, 253, 0, 0.45) !important; */
+}
+
+.deleted .selected {
+  background-color: rgba(255, 0, 0, 0.3) !important;
+  /* background-color: rgba(255, 0, 55, 0.55) !important; */
+}
+
+.deleted .marked-for-delete {
+  text-decoration: line-through;
+}
+
+.key {
+  font-weight: bold; 
+}

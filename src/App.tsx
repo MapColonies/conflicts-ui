@@ -4,6 +4,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { CssBaseline } from '@material-ui/core';
 import ConflictsView from './conflicts/views/conflicts-view';
+import { TagMerge } from './conflicts/components/tag-merge';
 
 const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -21,7 +22,8 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <ConflictsView />
+      {/* <ConflictsView /> */}
+      <TagMerge/>
     </ThemeProvider>
   );
 };
