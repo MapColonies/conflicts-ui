@@ -1,49 +1,37 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-magic-numbers */
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import {
   ColDef,
-  GridApi,
   CellClickedEvent,
-  ColumnApi,
   ValueFormatterParams,
+  IsColumnFuncParams,
+  ValueParserParams,
 } from 'ag-grid-community';
 import './tag-merge.css';
+import { ConflictTagRowData } from '../models/tag-merge/row-data';
+import { ChangeType } from '../../common/models/change-type';
+import { TagDiff } from '../models/tag-merge/tag-diff';
+import { tagDiffToRowData, rowDataToMergedTags } from '../helpers/tag-merge';
 
-enum ChangeType {
-  CREATED,
-  MODIFIED,
-  DELETED,
-  UNCHANGED,
-}
-
-interface ConflictTag {
-  key: string;
-  source?: string;
-  target: string | '';
-  final?: string;
-  type: ChangeType;
-}
-
-interface Params {
-  data: ConflictTag;
+interface RowClassRulesParams {
+  data: ConflictTagRowData;
   value: string;
 }
 
+const allDataCellClass = 'cells';
+
 const onCellClicked = (e: CellClickedEvent): void => {
-  const data = e.data as ConflictTag;
+  const data = e.data as ConflictTagRowData;
   if (e.colDef.colId !== 'final' && data.type !== ChangeType.UNCHANGED) {
-    const node = e.api.getRowNode(e.data.key);
+    const node = e.api.getRowNode(data.key);
     node.setDataValue('final', e.value);
   }
 };
 
-const typeColumnValueFormatter = (params: ValueFormatterParams): string => {
-  const data = params.data as ConflictTag;
+const changeTypeColumnValueFormatter = (params: ValueFormatterParams): string => {
+  const data = params.data as ConflictTagRowData;
   switch (data.type) {
     case ChangeType.CREATED:
       return 'C';
@@ -57,92 +45,91 @@ const typeColumnValueFormatter = (params: ValueFormatterParams): string => {
 };
 
 const deletedMergedValueFormatter = (params: ValueFormatterParams): string => {
-  const data = params.data as ConflictTag;
+  const data = params.data as ConflictTagRowData;
   const value = params.value as string;
   if (data.type === ChangeType.DELETED && data.final === '') {
-    return data.target;
+    return data.target ?? '';
   } else {
     return value;
   }
 };
 
-const markCellAsSelected = (params: Params) => {
+const markCellAsSelected = (params: RowClassRulesParams): boolean => {
   return (
     params.data.final === params.value &&
     params.data.type !== ChangeType.UNCHANGED
   );
 };
 
-const tags: ConflictTag[] = [
+const mergedValueParser = (params: ValueParserParams): string => {
+  if (params.newValue === undefined) {
+    return '';
+  }
+  return params.newValue as string;
+};
+
+const colDef: ColDef[] = [
   {
-    key: 'highway',
-    source: 'primary',
-    final: '',
-    type: ChangeType.CREATED,
-    target: '',
+    headerName: '',
+    valueFormatter: changeTypeColumnValueFormatter,
+    width: 20,
   },
   {
-    key: 'building',
-    source: 'commercial',
-    target: 'park',
-    final: 'park',
-    type: ChangeType.MODIFIED,
+    headerName: '',
+    field: 'key',
+    cellClass: ['key'],
   },
   {
-    key: 'Amenity',
-    source: '',
-    target: 'cow shop',
-    final: 'cow shop',
-    type: ChangeType.DELETED,
+    headerName: 'source',
+    field: 'source',
+    cellClass: [allDataCellClass],
+    cellClassRules: { selected: markCellAsSelected },
+    onCellClicked: onCellClicked,
   },
   {
-    key: 'another random tag',
-    target: 'Random value',
-    type: ChangeType.UNCHANGED,
+    field: 'target',
+    headerName: 'target',
+    cellClass: allDataCellClass,
+    cellClassRules: { selected: markCellAsSelected },
+    onCellClicked: onCellClicked,
+  },
+  {
+    field: 'final',
+    headerName: 'merged',
+    valueParser: mergedValueParser,
+    editable: (params: IsColumnFuncParams):boolean => {
+      const data = params.data as ConflictTagRowData;
+      return data.type === ChangeType.CREATED || data.type === ChangeType.MODIFIED
+    },
+    cellClass: allDataCellClass,
+    cellClassRules: {
+      'marked-for-delete': (params: RowClassRulesParams): boolean => params.value === '',
+    },
+    valueFormatter: deletedMergedValueFormatter,
   },
 ];
 
-export const TagMerge: React.FC = () => {
-  const [gridApi, setGridApi] = useState<GridApi>();
-  const [columnApi, setColumnApi] = useState<ColumnApi>();
-  const [rowData, setRowData] = useState(tags);
-  const colDef: ColDef[] = [
-    {
-      headerName: '',
-      valueFormatter: typeColumnValueFormatter,
-      width: 20,
-    },
-    {
-      headerName: '',
-      field: 'key',
-      cellClass: 'key',
-    },
-    {
-      field: 'source',
-      headerName: 'source',
-      onCellClicked: onCellClicked,
-      cellClass: 'source',
-      cellClassRules: { selected: markCellAsSelected },
-    },
-    {
-      field: 'target',
-      headerName: 'target',
-      onCellClicked: onCellClicked,
-      cellClassRules: { selected: markCellAsSelected },
-    },
-    {
-      field: 'final',
-      headerName: 'merged',
-      editable: true,
-      cellClassRules: {
-        'marked-for-delete': (params: Params): boolean => params.value === '',
-      },
-      valueFormatter: deletedMergedValueFormatter,
-    },
-  ];
-  //   if (gridApi) {
-  //       gridApi.coldef
-  //   }
+const gridRowClassRules = {
+  'selected-target': (params: RowClassRulesParams): boolean =>
+    params.data.source === params.data.final,
+  created: (params: RowClassRulesParams): boolean =>
+    params.data.type === ChangeType.CREATED,
+  modified: (params: RowClassRulesParams): boolean =>
+    params.data.type === ChangeType.MODIFIED,
+  deleted: (params: RowClassRulesParams): boolean =>
+    params.data.type === ChangeType.DELETED,
+}
+
+interface TagMergeProps {
+  tags: TagDiff;
+  onValueChange?: (mergedTags: {[key:string]:string}) => void
+}
+
+export const TagMerge: React.FC<TagMergeProps> = (props) => {
+  // const [gridApi, setGridApi] = useState<GridApi>();
+  // const [columnApi, setColumnApi] = useState<ColumnApi>();
+  const [rowData, setRowData] = useState(tagDiffToRowData(props.tags));
+
   return (
     <div
       className="ag-theme-alpine"
@@ -154,23 +141,13 @@ export const TagMerge: React.FC = () => {
       <AgGridReact
         columnDefs={colDef}
         rowData={rowData}
-        onGridReady={(e): void => {
-          setGridApi(e.api);
-          setColumnApi(e.columnApi);
-        }}
-        rowClassRules={{
-          'selected-target': (params: Params): boolean =>
-            params.data.source === params.data.final,
-          created: (params: Params): boolean =>
-            params.data.type === ChangeType.CREATED,
-          modified: (params: Params): boolean =>
-            params.data.type === ChangeType.MODIFIED,
-          deleted: (params: Params): boolean =>
-            params.data.type === ChangeType.DELETED,
-          // unchanged: (params: Params): boolean =>
-          //   params.data.type === ChangeType.UNCHANGED,
-        }}
-        getRowNodeId={(data: ConflictTag): string => data.key}
+        // onGridReady={(e): void => {
+        //   setGridApi(e.api);
+        //   setColumnApi(e.columnApi);
+        // }}
+        onCellValueChanged={() => props.onValueChange?.(rowDataToMergedTags(rowData))}
+        rowClassRules={gridRowClassRules}
+        getRowNodeId={(data: ConflictTagRowData): string => data.key}
       ></AgGridReact>
     </div>
   );

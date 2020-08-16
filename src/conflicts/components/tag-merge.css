@@ -41,5 +41,9 @@
 }
 
 .key {
-  font-weight: bold; 
+  font-weight: bold;
+}
+
+.cells {
+  text-align: center;
 }
