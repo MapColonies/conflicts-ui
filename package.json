@@ -48,8 +48,8 @@
   "dependencies": {
     "@commitlint/cli": "^9.1.1",
     "@commitlint/config-conventional": "^9.1.1",
-    "@map-colonies/react-components": "file:../shared-components/packages/mc-react-components",
-    "@map-colonies/react-core": "file:../shared-components/packages/mc-react-ui-components",
+    "@map-colonies/react-components": "1.0.1",
+    "@map-colonies/react-core": "1.0.1",
     "@material-ui/core": "^4.11.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
