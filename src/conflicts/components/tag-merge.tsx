@@ -17,7 +17,7 @@ import { tagDiffToRowData, rowDataToMergedTags } from '../helpers/tag-merge';
 
 interface RowClassRulesParams {
   data: ConflictTagRowData;
-  value: string;
+  value?: string;
 }
 
 const allDataCellClass = 'cells';
@@ -30,7 +30,9 @@ const onCellClicked = (e: CellClickedEvent): void => {
   }
 };
 
-const changeTypeColumnValueFormatter = (params: ValueFormatterParams): string => {
+const changeTypeColumnValueFormatter = (
+  params: ValueFormatterParams
+): string => {
   const data = params.data as ConflictTagRowData;
   switch (data.type) {
     case ChangeType.CREATED:
@@ -47,12 +49,21 @@ const changeTypeColumnValueFormatter = (params: ValueFormatterParams): string =>
 const deletedMergedValueFormatter = (params: ValueFormatterParams): string => {
   const data = params.data as ConflictTagRowData;
   const value = params.value as string;
-  if (data.type === ChangeType.DELETED && data.final === '') {
+  if (data.type === ChangeType.DELETED && data.final === undefined) {
     return data.target ?? '';
   } else {
     return value;
   }
 };
+
+const preventSavingEmptyModifiedTag = (params:ValueParserParams):string | undefined => {
+  const data = params.data as ConflictTagRowData;  
+  if (data.type === ChangeType.MODIFIED && params.newValue === '') {
+    return params.oldValue as string;
+  }
+  const newValue = params.newValue as string;
+  return newValue !== ''? newValue : undefined;
+} 
 
 const markCellAsSelected = (params: RowClassRulesParams): boolean => {
   return (
@@ -61,23 +72,18 @@ const markCellAsSelected = (params: RowClassRulesParams): boolean => {
   );
 };
 
-const mergedValueParser = (params: ValueParserParams): string => {
-  if (params.newValue === undefined) {
-    return '';
-  }
-  return params.newValue as string;
-};
-
 const colDef: ColDef[] = [
   {
     headerName: '',
     valueFormatter: changeTypeColumnValueFormatter,
     width: 20,
+    suppressMovable: true,
   },
   {
     headerName: '',
     field: 'key',
     cellClass: ['key'],
+    suppressMovable: true,
   },
   {
     headerName: 'source',
@@ -85,6 +91,7 @@ const colDef: ColDef[] = [
     cellClass: [allDataCellClass],
     cellClassRules: { selected: markCellAsSelected },
     onCellClicked: onCellClicked,
+    suppressMovable: true,
   },
   {
     field: 'target',
@@ -92,20 +99,25 @@ const colDef: ColDef[] = [
     cellClass: allDataCellClass,
     cellClassRules: { selected: markCellAsSelected },
     onCellClicked: onCellClicked,
+    suppressMovable: true,
   },
   {
     field: 'final',
     headerName: 'merged',
-    valueParser: mergedValueParser,
-    editable: (params: IsColumnFuncParams):boolean => {
+    valueParser: preventSavingEmptyModifiedTag,
+    editable: (params: IsColumnFuncParams): boolean => {
       const data = params.data as ConflictTagRowData;
-      return data.type === ChangeType.CREATED || data.type === ChangeType.MODIFIED
+      return (
+        data.type === ChangeType.CREATED || data.type === ChangeType.MODIFIED
+      );
     },
     cellClass: allDataCellClass,
     cellClassRules: {
-      'marked-for-delete': (params: RowClassRulesParams): boolean => params.value === '',
+      'marked-for-delete': (params: RowClassRulesParams): boolean =>
+        params.value === undefined,
     },
     valueFormatter: deletedMergedValueFormatter,
+    suppressMovable: true,
   },
 ];
 
@@ -118,17 +130,17 @@ const gridRowClassRules = {
     params.data.type === ChangeType.MODIFIED,
   deleted: (params: RowClassRulesParams): boolean =>
     params.data.type === ChangeType.DELETED,
-}
+};
 
 interface TagMergeProps {
   tags: TagDiff;
-  onValueChange?: (mergedTags: {[key:string]:string}) => void
+  onValueChange?: (mergedTags: { [key: string]: string }) => void;
 }
 
 export const TagMerge: React.FC<TagMergeProps> = (props) => {
   // const [gridApi, setGridApi] = useState<GridApi>();
   // const [columnApi, setColumnApi] = useState<ColumnApi>();
-  const [rowData, setRowData] = useState(tagDiffToRowData(props.tags));
+  const [rowData] = useState(tagDiffToRowData(props.tags));
 
   return (
     <div
@@ -145,7 +157,9 @@ export const TagMerge: React.FC<TagMergeProps> = (props) => {
         //   setGridApi(e.api);
         //   setColumnApi(e.columnApi);
         // }}
-        onCellValueChanged={() => props.onValueChange?.(rowDataToMergedTags(rowData))}
+        onCellValueChanged={(): void =>
+          props.onValueChange?.(rowDataToMergedTags(rowData))
+        }
         rowClassRules={gridRowClassRules}
         getRowNodeId={(data: ConflictTagRowData): string => data.key}
       ></AgGridReact>
