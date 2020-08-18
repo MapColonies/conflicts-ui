@@ -46,24 +46,43 @@ const changeTypeColumnValueFormatter = (
   }
 };
 
-const deletedMergedValueFormatter = (params: ValueFormatterParams): string => {
+const mergedValueFormatter = (params: ValueFormatterParams): string => {
   const data = params.data as ConflictTagRowData;
   const value = params.value as string;
+
+  // show the target value if the change type is deleted.
   if (data.type === ChangeType.DELETED && data.final === undefined) {
     return data.target ?? '';
-  } else {
-    return value;
   }
+
+  // hide the merged value if the row type is unchanged
+  if (data.type === ChangeType.UNCHANGED) {
+    return '';
+  }
+  return value;
 };
 
-const preventSavingEmptyModifiedTag = (params:ValueParserParams):string | undefined => {
-  const data = params.data as ConflictTagRowData;  
+const sourceValueFormatter = (params: ValueFormatterParams) : string => {
+  const data = params.data as ConflictTagRowData;
+  const value = params.value as string;
+
+  // hide source value if change type is unchanged
+  if (data.type === ChangeType.UNCHANGED) {
+    return '';
+  }
+  return value;
+}
+
+const preventSavingEmptyModifiedTag = (
+  params: ValueParserParams
+): string | undefined => {
+  const data = params.data as ConflictTagRowData;
   if (data.type === ChangeType.MODIFIED && params.newValue === '') {
     return params.oldValue as string;
   }
   const newValue = params.newValue as string;
-  return newValue !== ''? newValue : undefined;
-} 
+  return newValue !== '' ? newValue : undefined;
+};
 
 const markCellAsSelected = (params: RowClassRulesParams): boolean => {
   return (
@@ -88,6 +107,7 @@ const colDef: ColDef[] = [
   {
     headerName: 'source',
     field: 'source',
+    valueFormatter: sourceValueFormatter,
     cellClass: [allDataCellClass],
     cellClassRules: { selected: markCellAsSelected },
     onCellClicked: onCellClicked,
@@ -116,7 +136,7 @@ const colDef: ColDef[] = [
       'marked-for-delete': (params: RowClassRulesParams): boolean =>
         params.value === undefined,
     },
-    valueFormatter: deletedMergedValueFormatter,
+    valueFormatter: mergedValueFormatter,
     suppressMovable: true,
   },
 ];

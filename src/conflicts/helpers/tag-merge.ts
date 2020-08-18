@@ -3,7 +3,7 @@ import { ConflictTagRowData } from '../models/tag-merge/row-data';
 import { ChangeType } from '../../common/models/change-type';
 
 const getChangetypeFromTag = (source?: string, target?: string): ChangeType => {
-  if (source !== undefined && target !== undefined) {
+  if (typeof source === 'string' && typeof target === 'string') {
     if (source === target) {
       return ChangeType.UNCHANGED;
     } else {
@@ -19,13 +19,6 @@ const getChangetypeFromTag = (source?: string, target?: string): ChangeType => {
 export const tagDiffToRowData = (tagDiff: TagDiff): ConflictTagRowData[] => {
   return Object.entries(tagDiff).map(([key, { source, target }]) => {
     const changeType = getChangetypeFromTag(source, target);
-    if (changeType === ChangeType.UNCHANGED) {
-      return {
-        key,
-        target,
-        type: changeType,
-      };
-    }
     return {
       key,
       source,
@@ -42,7 +35,7 @@ export const rowDataToMergedTags = (
   const mergedTags: Record<string, string> = {};
 
   rowData.forEach((row) => {
-    if (row.final !== undefined && row.final !== '') {
+    if (typeof row.final === 'string' && row.final !== '') {
       mergedTags[row.key] = row.final;
     }
   });
