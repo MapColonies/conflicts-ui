@@ -35,7 +35,7 @@ export const rowDataToMergedTags = (
   const mergedTags: Record<string, string> = {};
 
   rowData.forEach((row) => {
-    if (typeof row.final === 'string' && row.final !== '') {
+    if (typeof row.final === 'string') {
       mergedTags[row.key] = row.final;
     }
   });
