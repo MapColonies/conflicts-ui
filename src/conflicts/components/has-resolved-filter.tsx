@@ -25,7 +25,7 @@ export const HasResolvedFilter: React.FC = observer(() => {
       enhanced
       value={Object.keys(options).find((key) => options[key] === searchParams.resolved)}
       options={Object.keys(options).map((key) => key)}
-      onChange={(e: React.ChangeEvent<HTMLSelectElement>): void => onChange(e.target.value as string)}
+      onChange={(e: React.ChangeEvent<HTMLSelectElement>): void => onChange(e.target.value)}
     />
   );
 });
