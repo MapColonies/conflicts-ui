@@ -20,8 +20,7 @@ ReactDOM.render(
     <StoreProvider value={store}>
       <App />
     </StoreProvider>
-  </React.StrictMode>
-  ,
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

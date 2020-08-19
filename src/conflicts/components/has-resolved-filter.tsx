@@ -1,8 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
-
 import { Select } from '@map-colonies/react-core';
-
 import { useStore } from '../models/rootStore';
 
 const options: { [key: string]: boolean | undefined } = {
