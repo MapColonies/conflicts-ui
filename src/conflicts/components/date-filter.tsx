@@ -1,7 +1,10 @@
 import React from 'react';
-import { Button, Popover } from '@material-ui/core';
 import { observer } from 'mobx-react-lite';
-import { DateTimeRangePicker } from '@map-colonies/shared-components';
+
+import { Popover } from '@map-colonies/react-components';
+import { DateTimeRangePicker } from '@map-colonies/react-components';
+import { Button } from '@map-colonies/react-core';
+
 import { useStore } from '../models/rootStore';
 
 export const DateFilter: React.FC = observer(() => {
@@ -9,6 +12,7 @@ export const DateFilter: React.FC = observer(() => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
     setAnchorEl(event.currentTarget);
   };
@@ -22,10 +26,14 @@ export const DateFilter: React.FC = observer(() => {
   const open = Boolean(anchorEl);
   return (
     <>
-      <Button variant="outlined" onClick={handleClick}>
+      <Button 
+        raised 
+        onClick={handleClick}
+      > 
         {from ? from.toLocaleString() : 'Start of time'} -{' '}
         {to ? to.toLocaleString() : 'End of time'}
       </Button>
+
       <Popover
         open={open}
         anchorEl={anchorEl}

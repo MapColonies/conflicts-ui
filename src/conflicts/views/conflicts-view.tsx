@@ -4,7 +4,7 @@ import {
   VectorSource,
   MapFilterContainer,
   GeoJSONFeature,
-} from '@map-colonies/shared-components';
+} from '@map-colonies/react-components';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../models/rootStore';
 import { DateFilter } from '../components/date-filter';
